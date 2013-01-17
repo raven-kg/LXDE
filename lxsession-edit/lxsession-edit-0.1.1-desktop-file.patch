@@ -1,0 +1,20 @@
+--- lxsession-edit-0.1.1.orig/lxsession-edit.desktop.in	2009-06-18 05:39:43.000000000 +0200
++++ lxsession-edit-0.1.1/lxsession-edit.desktop.in	2009-07-06 21:59:25.000000000 +0200
+@@ -1,13 +1,16 @@
+ [Desktop Entry]
+ Type=Application
+-Icon=xfwm4.png
++Icon=session-properties
+ Exec=lxsession-edit
+ Name=Desktop Session Settings
++Name[de]=Sitzungseigenschaften
+ Name[zh_TW]=桌面工作階段設定
+ Name[fi]=Työpöytäistunnon asetukset
+ Name[ja]=デスクトップセッションの設定
+ Comment=Manage applications loaded in desktop session
++Comment[de]=Automatisch gestartete Anwendungen verwalten
+ Comment[zh_TW]=管理桌面工作階段中載入的程式
+ Comment[fi]=Hallitse automaattisesti käynnistettäviä sovelluksia
+ Comment[ja]=デスクトップセッションでロードされるアプリケーションを管理します
+ Categories=Settings;DesktopSettings;X-LXDE-Settings;
++NotShowIn=GNOME;KDE;XFCE;

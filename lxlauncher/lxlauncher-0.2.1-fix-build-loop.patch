@@ -1,0 +1,26 @@
+From b1ec4b856582467b3c287e443213c9f97a1dc38e Mon Sep 17 00:00:00 2001
+From: Andrew Lee <ajqlee@debian.org>
+Date: Thu, 16 Jul 2009 15:08:26 +0000
+Subject: [PATCH] Apply build loop patch to lxlauncher and lxsession-edit for cwickert.
+
+---
+ configure.in |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 37fdcf2..945cd2e 100644
+--- a/configure.in
++++ b/configure.in
+@@ -5,6 +5,9 @@ AM_INIT_AUTOMAKE(lxlauncher, 0.2.1)
+ AM_CONFIG_HEADER(config.h)
+ AM_MAINTAINER_MODE
+ 
++# Init intltool
++IT_PROG_INTLTOOL
++
+ AC_ISC_POSIX
+ AC_PROG_CC
+ AM_PROG_CC_STDC
+-- 
+1.6.3
+

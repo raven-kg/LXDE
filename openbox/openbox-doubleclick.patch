@@ -1,0 +1,97 @@
+commit c885c9a676e4860a68f0bdce4b926902f6597ebb
+Author: Mikael Magnusson <mikachu@gmail.com>
+Date:   Thu Aug 4 18:34:54 2011 +0200
+
+    Change default doubleclick timeout to 500ms and keep track of where last click was
+    
+    Bug #5152 - "mouse double-click time is too low by default - 200ms"
+    
+    We only use the doubleclick in one place in the default configuration,
+    for doubleclicking titlebars to maximize windows, so any negative impact
+    of increasing the timeout should be minimal, especially with the
+    addition of requiring the two clicks to be in the same place.
+    
+    Doubleclicks are hardcoded to occur within 8 pixels for now, it doesn't
+    seem worth it to add a config until someone complains. A possibility is
+    using the drag threshold, but some people have that set very low so it
+    could be hard to doubleclick then.
+
+diff --git a/data/rc.xml b/data/rc.xml
+index 7598a72..209cc2d 100644
+--- a/data/rc.xml
++++ b/data/rc.xml
+@@ -313,7 +313,7 @@
+ <mouse>
+   <dragThreshold>1</dragThreshold>
+   <!-- number of pixels the mouse must move before a drag begins -->
+-  <doubleClickTime>200</doubleClickTime>
++  <doubleClickTime>500</doubleClickTime>
+   <!-- in milliseconds (1000 = 1 second) -->
+   <screenEdgeWarpTime>400</screenEdgeWarpTime>
+   <!-- Time before changing desktops when the pointer touches the edge of the
+diff --git a/doc/rc-mouse-focus.xml b/doc/rc-mouse-focus.xml
+index 06c3ce5..dc7f2e9 100644
+--- a/doc/rc-mouse-focus.xml
++++ b/doc/rc-mouse-focus.xml
+@@ -226,7 +226,7 @@
+ <mouse>
+   <dragThreshold>8</dragThreshold>
+   <!-- number of pixels the mouse must move before a drag begins -->
+-  <doubleClickTime>200</doubleClickTime>
++  <doubleClickTime>500</doubleClickTime>
+   <!-- in milliseconds (1000 = 1 second) -->
+ 
+   <context name="Frame">
+diff --git a/openbox/config.c b/openbox/config.c
+index debd9fb..8e0e5ac 100644
+--- a/openbox/config.c
++++ b/openbox/config.c
+@@ -1070,7 +1070,7 @@ void config_startup(ObtXmlInst *i)
+     obt_xml_register(i, "keyboard", parse_keyboard, NULL);
+ 
+     config_mouse_threshold = 8;
+-    config_mouse_dclicktime = 200;
++    config_mouse_dclicktime = 500;
+     config_mouse_screenedgetime = 400;
+     config_mouse_screenedgewarp = FALSE;
+ 
+diff --git a/openbox/mouse.c b/openbox/mouse.c
+index ddf6851..2f0c8f5 100644
+--- a/openbox/mouse.c
++++ b/openbox/mouse.c
+@@ -211,7 +211,7 @@ gboolean mouse_event(ObClient *client, XEvent *e)
+     static Time ltime;
+     static guint button = 0, state = 0, lbutton = 0;
+     static Window lwindow = None;
+-    static gint px, py, pwx = -1, pwy = -1;
++    static gint px, py, pwx = -1, pwy = -1, lx = -10, ly = -10;
+     gboolean used = FALSE;
+ 
+     ObFrameContext context;
+@@ -290,18 +290,24 @@ gboolean mouse_event(ObClient *client, XEvent *e)
+                 if (e->xbutton.x >= (signed)-b &&
+                     e->xbutton.y >= (signed)-b &&
+                     e->xbutton.x < (signed)(w+b) &&
+-                    e->xbutton.y < (signed)(h+b)) {
++                    e->xbutton.y < (signed)(h+b))
++                {
+                     click = TRUE;
+                     /* double clicks happen if there were 2 in a row! */
+                     if (lbutton == button &&
+                         lwindow == e->xbutton.window &&
+                         e->xbutton.time - config_mouse_dclicktime <=
+-                        ltime) {
++                        ltime &&
++                        ABS(e->xbutton.x - lx) < 8 &&
++                        ABS(e->xbutton.y - ly) < 8)
++                    {
+                         dclick = TRUE;
+                         lbutton = 0;
+                     } else {
+                         lbutton = button;
+                         lwindow = e->xbutton.window;
++                        lx = e->xbutton.x;
++                        ly = e->xbutton.y;
+                     }
+                 } else {
+                     lbutton = 0;

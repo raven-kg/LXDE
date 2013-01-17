@@ -1,0 +1,18 @@
+diff --git a/src/base/fm-path.c b/src/base/fm-path.c
+index 937a9d7..bae49fc 100644
+--- a/src/base/fm-path.c
++++ b/src/base/fm-path.c
+@@ -51,8 +51,11 @@ FmPath* fm_path_new(const char* path)
+ 
+     if( path[0] == '/' ) /* if this is a absolute native path */
+     {
+-        if (path[1])
+-            return fm_path_new_relative(root, path + 1);
++        /* handle the case where path begins with // */
++        while (*path == '/') path++;
++
++        if (*path)
++            return fm_path_new_relative(root, path);
+         else
+             /* special case: handle root dir */
+             return fm_path_ref( root );

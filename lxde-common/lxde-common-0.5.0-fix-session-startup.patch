@@ -1,0 +1,8 @@
+--- trunk/lxde-common/startlxde.in	2009/09/03 00:34:22	1964
++++ trunk/lxde-common/startlxde.in	2009/12/10 18:54:36	2187
+@@ -25,4 +25,4 @@
+ export SAL_USE_VCLPLUGIN=gtk
+ 
+ # Start the LXDE session
+-exec @prefix@/bin/lxsession -s LXDE
++exec @prefix@/bin/lxsession -s LXDE -e LXDE

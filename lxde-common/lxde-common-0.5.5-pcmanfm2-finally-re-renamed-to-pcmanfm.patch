@@ -1,0 +1,15 @@
+commit 908f14c74766eb237afda780237db67e7798da0b
+Author: Andrea Florio <anubis@suse-netbook.site>
+Date:   Tue May 25 23:56:07 2010 +0200
+
+    pcmanfm2 has been finally re-named as pcmanfm
+
+diff --git a/autostart b/autostart
+index 5c5aee3..d5b6514 100644
+--- a/autostart
++++ b/autostart
+@@ -1,3 +1,3 @@
+ @lxpanel --profile LXDE
+-@pcmanfm2 --desktop --profile lxde
++@pcmanfm --desktop --profile lxde
+ @xscreensaver -no-splash

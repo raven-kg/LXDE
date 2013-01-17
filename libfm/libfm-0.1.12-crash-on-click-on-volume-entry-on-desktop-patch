@@ -1,0 +1,35 @@
+diff --git a/src/base/fm-file-launcher.c b/src/base/fm-file-launcher.c
+index 1b496d7..58c12ec 100644
+--- a/src/base/fm-file-launcher.c
++++ b/src/base/fm-file-launcher.c
+@@ -119,7 +119,7 @@ gboolean fm_launch_files(GAppLaunchContext* ctx, GList* file_infos, FmFileLaunch
+                     {
+                         if(launcher->error)
+                             launcher->error(ctx, err, user_data);
+-                        g_error_free(err);
++                        if (err) g_error_free(err);
+                         err = NULL;
+                     }
+                     continue;
+@@ -202,7 +202,7 @@ gboolean fm_launch_files(GAppLaunchContext* ctx, GList* file_infos, FmFileLaunch
+                     l->data = uri;
+                 }
+                 fis = g_list_reverse(fis);
+-                g_app_info_launch_uris(app, fis, ctx, err);
++                g_app_info_launch_uris(app, fis, ctx, &err);
+                 /* free URI strings */
+                 g_list_foreach(fis, (GFunc)g_free, NULL);
+                 g_object_unref(app);
+diff --git a/src/gtk/fm-gtk-utils.c b/src/gtk/fm-gtk-utils.c
+index 12ca7b6..b670765 100644
+--- a/src/gtk/fm-gtk-utils.c
++++ b/src/gtk/fm-gtk-utils.c
+@@ -587,7 +587,7 @@ static gboolean on_launch_error(GAppLaunchContext* ctx, GError* err, gpointer us
+ {
+     gpointer* data = (gpointer*)user_data;
+     GtkWindow* parent = (GtkWindow*)data[0];
+-    fm_show_error(parent, err->message);
++    if (err) fm_show_error(parent, err->message);
+     return TRUE;
+ }
+ 

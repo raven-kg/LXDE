@@ -1,0 +1,29 @@
+From 5c74d1d5ee35b527dedbe46f013be19c3ae20abe Mon Sep 17 00:00:00 2001
+From: =?utf8?q?Andrew=20Lee=20(=E6=9D=8E=E5=81=A5=E7=A7=8B)?= <ajqlee@debian.org>
+Date: Mon, 12 Apr 2010 14:43:28 +0800
+Subject: [PATCH] Apply patch from Enrico Zini <enrico@debian.org>
+ Do not segfault if a window manager returns no data for current desktop.
+
+---
+ src/working-area.c |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+diff --git a/src/working-area.c b/src/working-area.c
+index d309558..65eeb0e 100644
+--- a/src/working-area.c
++++ b/src/working-area.c
+@@ -94,7 +94,10 @@ gf_display_get_workarea(GdkScreen* g_screen, GdkRectangle *rect) {
+ 	if(!data)
+ 		return FALSE;
+ 
+-	current = *(guint32 *)data;
++	if (len == 0)
++		current = 0;
++	else
++		current = *(guint32 *)data;
+ 	XFree(data);
+ 
+ 	/* find the _NET_WORKAREA atom */
+-- 
+1.7.0.1
+
